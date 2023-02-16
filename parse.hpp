@@ -4,6 +4,6 @@
 #include <vector>
 
 void parse_read (FILE *bfile);
-void parse_new (char token);
+void parse_new (char token, bool acumulate);
 
 #endif
