@@ -41,7 +41,7 @@ void asm_do_file (unsigned bytes, bool doinput) {
         .temp = "main:\n"
                 "\tpushq     %rbp\n"
                 "\tmovq      %rsp, %rbp\n"
-                "\tsubq      $" + Assembly::sub_bytes(bytes, doinput)  + "(%rbp), %rsp\n" +
+                "\tsubq      $" + Assembly::sub_bytes(bytes, doinput)  + ", %rsp\n" +
                 Assembly::set_bytes(bytes) +
                 "%s"
                 "\tleave\n"
@@ -56,6 +56,18 @@ void asm_inc_byte (unsigned times) {
 
 void asm_dec_byte (unsigned times) {
     *Assembly::cubody_label += "\tsubb      $" + std::to_string(times) + ", -" + std::to_string(Assembly::cubyte) + "(%rbp)\n";
+}
+
+void asm_out_byte (unsigned times) {
+    *Assembly::cubody_label += "\tmovsbl    -" + std::to_string(Assembly::cubyte) + "(%rbp), %eax\n" +
+                                "\tmovl      %eax, %edi\n" +
+                                "\tcall      putchar@PLT\n" +
+                                "\tmovl      $0, %eax\n";
+    while ( --times ) { asm_out_byte(times); }
+}
+
+void asm_inp_byte (unsigned times) {
+    // TODO: :)
 }
 
 void asm_write () {
