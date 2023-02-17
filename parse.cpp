@@ -58,9 +58,9 @@ void parse_run () {
             case '+' : { asm_inc_byte(token.times); break; }
             case '-' : { asm_dec_byte(token.times); break; }
             case '.' : { asm_out_byte(token.times); break; }
-            case ',' : { break; }
-            case '<' : { break; }
-            case '>' : { break; }
+            case ',' : { asm_inp_byte(token.times); break; }
+            case '<' : { asm_prv_byte(); break; }
+            case '>' : { asm_nxt_byte(); break; }
             case '[' : { break; }
             case ']' : { break; }
         }

@@ -36,7 +36,7 @@ void asm_do_file (unsigned bytes, bool doinput) {
     }
 
     fprintf(Assembly::outf, ".globl main\n");
-    fprintf(Assembly::outf, ".type main, @function\n");
+    fprintf(Assembly::outf, ".type main, @ function\n");
     Assembly::labels.push_back(Label {
         .temp = "main:\n"
                 "\tpushq     %rbp\n"
@@ -59,10 +59,9 @@ void asm_dec_byte (unsigned times) {
 }
 
 void asm_out_byte (unsigned times) {
-    *Assembly::cubody_label += "\tmovsbl    -" + std::to_string(Assembly::cubyte) + "(%rbp), %eax\n" +
-                                "\tmovl      %eax, %edi\n" +
-                                "\tcall      putchar@PLT\n" +
-                                "\tmovl      $0, %eax\n";
+    *Assembly::cubody_label += "\tmovsbl    -" + std::to_string(Assembly::cubyte) + "(%rbp), %edi\n" +
+                               "\tcall      putchar@PLT\n" +
+                               "\tmovl      $0, %eax\n";
     while ( --times ) { asm_out_byte(times); }
 }
 
@@ -70,8 +69,12 @@ void asm_inp_byte (unsigned times) {
     // TODO: :)
 }
 
+void asm_prv_byte () { Assembly::cubyte--; }
+void asm_nxt_byte () { Assembly::cubyte++; }
+
 void asm_write () {
     for (Label const &labl : Assembly::labels) {
         fprintf(Assembly::outf, labl.temp.c_str(), labl.body.c_str());
     }
+    fclose(Assembly::outf);
 }
