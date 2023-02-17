@@ -1,12 +1,12 @@
 compiler_cpp = g++
-compiler_asm = gcc
+compiler_asm = cc
 
 main: main.o parse.o assembly.o
 	$(compiler_cpp) -o bfcomp main.o parse.o assembly.o 
-	./bfcomp bfcodes/inputs.bf
+	./bfcomp bfcodes/loops.bf
 
 rm:
-	rm *.o bfcomp out.s a.out
+	rm *.o bfcomp a.out
 
 asm:
 	$(compiler_asm) out.s

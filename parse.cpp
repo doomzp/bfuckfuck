@@ -29,7 +29,7 @@ void parse_read (FILE *bfile) {
             case '+' : case '-' :
             case '.' : case ',' : { parse_new(token, true); break; }
 
-            case '<' : case '>' :
+            case '<' : case '>' : case '!' :
             case '[' : case ']' : { parse_new(token, false); break; }
         }
     }
@@ -61,8 +61,8 @@ void parse_run () {
             case ',' : { asm_inp_byte(token.times); break; }
             case '<' : { asm_prv_byte(); break; }
             case '>' : { asm_nxt_byte(); break; }
-            case '[' : { break; }
-            case ']' : { break; }
+            case '[' : { asm_new_loop(); break; }
+            case ']' : { asm_end_loop(); break; }
         }
     }
     asm_write();
