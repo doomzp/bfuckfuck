@@ -3,7 +3,7 @@ compiler_asm = gcc
 
 main: main.o parse.o assembly.o
 	$(compiler_cpp) -o bfcomp main.o parse.o assembly.o 
-	./bfcomp bfcodes/mems.bf
+	./bfcomp bfcodes/inputs.bf
 
 rm:
 	rm *.o bfcomp out.s a.out

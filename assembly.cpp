@@ -31,7 +31,7 @@ void asm_do_file (unsigned bytes, bool doinput) {
     if ( doinput ) {
         fprintf(Assembly::outf, ".section .rodata\n");
         fprintf(Assembly::outf, ".GET_IN:\n");
-        fprintf(Assembly::outf, "\t.string \"%%c\"\n");
+        fprintf(Assembly::outf, "\t.string \" %%c\"\n");
         fprintf(Assembly::outf, "\t.text\n");
     }
 
@@ -66,7 +66,11 @@ void asm_out_byte (unsigned times) {
 }
 
 void asm_inp_byte (unsigned times) {
-    // TODO: :)
+    *Assembly::cubody_label += "\tleaq      -" + std::to_string(Assembly::cubyte) + "(%rbp), %rsi\n"
+                               "\tleaq      .GET_IN(%rip), %rdi\n"
+                               "\tmovl      $0, %eax\n"
+                               "\tcall      __isoc99_scanf@PLT\n";
+    while ( --times ) { asm_out_byte(times); }
 }
 
 void asm_prv_byte () { Assembly::cubyte--; }
