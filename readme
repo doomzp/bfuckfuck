@@ -1,0 +1,7 @@
+bfuckfuck.
+	Very simple brainfuck compiler which is not able to compile most of brainfuck codes that actually does something
+	useful, but the idea of this project ain't make a powerfull brainfuck compiler, but learn something about assembly
+	and change myself to make a simple compiler.
+
+	This is project ain't done at all yet, there is an issue with the loops 'cause i can't understand them at all, so
+	i'll be back to make this better when i figure it out.

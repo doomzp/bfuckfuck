@@ -69,7 +69,8 @@ void asm_inp_byte (unsigned times) {
     Assembly::culabel->body += "\tleaq      -" + std::to_string(Assembly::cubyte) + "(%rbp), %rsi\n"
                                "\tleaq      .GET_IN(%rip), %rdi\n"
                                "\tmovl      $0, %eax\n"
-                               "\tcall      __isoc99_scanf@PLT\n";
+                               "\tcall      __isoc99_scanf@PLT\n"
+                               "\tmovl      $0, %eax\n";
     while ( --times ) { asm_out_byte(times); }
 }
 
