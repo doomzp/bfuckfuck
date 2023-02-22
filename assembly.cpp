@@ -109,8 +109,12 @@ void asm_input (unsigned times) {
     if ( --times ) { asm_print(times); }
 }
 
+void asm_moveThrough (unsigned times, char kase) {
+    const std::string duz = (kase == '>') ? "\taddq" : "\tsubq";
+    Asm::culabel->body += duz + " \t $" + std::to_string(times) + ", -8(%rbp)\n";
+}
+
 void asm_write () {
     fprintf(Asm::outf, Asm::culabel->temp.c_str(), Asm::culabel->body.c_str());
     fclose(Asm::outf);
 }
-

@@ -39,6 +39,7 @@ namespace Prgm {
                 case '+' : case '-' : { asm_incdec(token.times, token.token); break; }
                 case '.' : { asm_print(token.times); break; }
                 case ',' : { asm_input(token.times); break; }
+                case '<' : case '>' : { asm_moveThrough(token.times, token.token); break; }
             }
         }
         asm_write();
