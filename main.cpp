@@ -1,5 +1,4 @@
 #include "assembly.hpp"
-#include <vector>
 #include <string.h>
 
 namespace Args {
@@ -32,6 +31,16 @@ namespace Prgm {
             .token = token
         });
         prevtoken = token;
+    }
+
+    void pass_tokens () {
+        for (Token const &token : Prgm::tokens) {
+            switch ( token.token ) {
+                case '+' : case '-' : { asm_incdec(token.times, token.token); break; }
+                case '.' : { asm_print(token.times); break; }
+            }
+        }
+        asm_write();
     }
 }
 
@@ -80,5 +89,6 @@ int main (int argc, char** argv) {
     readArgs(argv, argc);
     readFile();
     asm_init(Args::saveasm_as + ".s", Prgm::input);
+    Prgm::pass_tokens();
     return 0;
 }

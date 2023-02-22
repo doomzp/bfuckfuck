@@ -1,0 +1,33 @@
+%rip
+%rax vs (%rax)
+
+
+
+
+---- Idea:
+    Instead of always using the pointer, we can use a single byte saved into %al
+    register, which will be required when '.', '+' and '-' operations are asked.
+    So for example the pointer will point to the first memory at beginning of the
+    program.
+        
+        leaq mems(%rip), %rax
+        movq %rax, -8(%rbp)
+
+    But now instead of using the pointer when '.', '+' or '-', we'll use the %al
+    register, so if bf code looks like this:
+        
+        ++++++++++
+        .--- >
+
+    The asm code will be something like:
+        addb $7, %al
+        movb %al, %bl
+        call putchar@PLT
+        movl $0, %eax
+        movb %bl, %al
+        subb $3, %al
+
+        addq $1, -8(%rbp)
+        <Pass again the new value to %al>
+
+    Or just the stack to save the current value.
