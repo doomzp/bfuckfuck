@@ -23,6 +23,12 @@ void asm_init (const std::string &asmname, bool input) {
     fprintf(Asm::outf, "mems:\n");
     fprintf(Asm::outf, "\t.zero 30000\n");
 
+    if ( input ) {
+        fprintf(Asm::outf, ".data\n");
+        fprintf(Asm::outf, "getinp:\n");
+        fprintf(Asm::outf, "\t.string \" %%c\"\n");
+    }
+
     fprintf(Asm::outf, ".globl main\n");
     fprintf(Asm::outf, ".type main, @function\n"); 
     fprintf(Asm::outf, ".text\n");
@@ -80,10 +86,27 @@ void asm_incdec (unsigned times, char kase) {
 }
 
 void asm_print (unsigned times) {
+    /* %edi register is used as first argument, but how this
+     * function (putchar) prints a char, the program doesn't
+     * need a 32 bit register, so %dil is used since it's the
+     * 8 bit version of %edi.
+     * */
     Asm::culabel->body += "\tmovq \t -8(%rbp), %rax\n"
                           "\tmovb \t (%rax), %dil\n"
                           "\tcall \t putchar@PLT\n";
-    while ( --times ) { asm_print(times); }
+    if ( --times ) { asm_print(times); }
+}
+
+void asm_input (unsigned times) {
+    /* How scanf function takes the mem address
+     * where the value will be stored, the pointer
+     * will be passed as argument.
+     * */
+    Asm::culabel->body += "\tmovq \t -8(%rbp), %rsi\n"
+                          "\tleaq \t getinp(%rip), %rdi\n"
+                          "\tmovl \t $0, %eax\n"
+                          "\tcall \t __isoc99_scanf@PLT\n";
+    if ( --times ) { asm_print(times); }
 }
 
 void asm_write () {
