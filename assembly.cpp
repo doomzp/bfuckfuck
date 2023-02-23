@@ -114,6 +114,34 @@ void asm_moveThrough (unsigned times, char kase) {
     Asm::culabel->body += duz + " \t $" + std::to_string(times) + ", -8(%rbp)\n";
 }
 
+void asm_startLoop () {
+    static unsigned nlabel = 1;
+    const std::string LC = "LC" + std::to_string(nlabel);
+    const std::string LB = "LB" + std::to_string(nlabel);
+
+    Asm::culabel->body += "\tcall \t " + LC + "\n";
+    Asm::labels.push_back(Asm::Label {
+        .temp = LC + ":\n"
+                "\tmovq \t -8(%rbp), %rax\n"
+                "\tmovb \t (%rax), %%al\n"
+                "\tcmpb \t $0, %%al\n"
+                "\tjne  \t " + LB + "\n"
+                "\tret\n" +
+                LB + ":\n"
+                "%s"
+                "\tjmp  \t " + LC + "\n"
+                "\tret\n"
+    });
+    Asm::culabel = &Asm::labels.back();
+    nlabel++;
+}
+
+void asm_endLoop () {
+    fprintf(Asm::outf, Asm::culabel->temp.c_str(), Asm::culabel->body.c_str());
+    Asm::culabel = &Asm::labels.rbegin()[1];
+    Asm::labels.pop_back();
+}
+
 void asm_write () {
     fprintf(Asm::outf, Asm::culabel->temp.c_str(), Asm::culabel->body.c_str());
     fclose(Asm::outf);

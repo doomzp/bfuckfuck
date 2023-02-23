@@ -40,6 +40,8 @@ namespace Prgm {
                 case '.' : { asm_print(token.times); break; }
                 case ',' : { asm_input(token.times); break; }
                 case '<' : case '>' : { asm_moveThrough(token.times, token.token); break; }
+                case '[' : { asm_startLoop(); break; }
+                case ']' : { asm_endLoop(); break; }
             }
         }
         asm_write();
