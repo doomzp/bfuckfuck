@@ -1,9 +1,15 @@
 #include "assembly.hpp"
 #include <string.h>
+#include <algorithm>
 
 namespace Args {
     std::string bfcompile;
     std::string saveasm_as = "out";
+    std::string bytes;
+
+    bool checkBytes () {
+        return std::all_of(Args::bytes.begin(), Args::bytes.end(), isdigit);
+    }
 }
 
 namespace Prgm {
@@ -12,7 +18,6 @@ namespace Prgm {
         const char token;
     } Token;
     std::vector<Prgm::Token> tokens;
-    bool input = false;
 
     void new_token (char token, bool repeats) {
         /* Tokens in brainfuck can be accumulated. Instead of
@@ -25,7 +30,6 @@ namespace Prgm {
             return;
         }
 
-        if ( token == ',' ) { Prgm::input = true; }
         Prgm::tokens.push_back(Prgm::Token {
             .times = 1,
             .token = token
@@ -40,8 +44,8 @@ namespace Prgm {
                 case '.' : { asm_print(token.times); break; }
                 case ',' : { asm_input(token.times); break; }
                 case '<' : case '>' : { asm_moveThrough(token.times, token.token); break; }
-                case '[' : { asm_startLoop(); break; }
-                case ']' : { asm_endLoop(); break; }
+                case '[' : case '(' : { asm_startLoop(token.token); break; }
+                case ']' : case ')' : { asm_endLoop(); break; }
             }
         }
         asm_write();
@@ -50,19 +54,26 @@ namespace Prgm {
 
 void usage () {
     puts("U: This compiler has these arguments:");
-    puts("    * -f <name>: brainfuck file to be compiled.");
-    puts("    * -s: Save the assembly file (optional).");
+    puts("    * -f <name>: brainfuck file to be compiled (must).");
+    puts("    * -s <name>: Save the assembly file with an specific name 'out' by default.");
+    puts("    * -b <bytes>: Use a number specific of bytes.");
     exit(0);
 }
 
 void readArgs (char** args, int narg) {
-    for (int i = 1; i < narg - 1; i++) {;
+    for (int i = 1; i < narg - 1; i++) {
         if ( !strcmp(args[i], "-f") ) { Args::bfcompile = std::string(args[++i]); }
         if ( !strcmp(args[i], "-s") ) { Args::saveasm_as = std::string(args[++i]); }
+        if ( !strcmp(args[i], "-b") ) { Args::bytes = std::string(args[++i]); }
     }
 
     if ( Args::bfcompile.empty() ) { 
         puts("E: No -f argument found, the compiler needs that argument!");
+        exit(1);
+    }
+    if ( Args::bytes.empty() ) { Args::bytes = "30000"; return; }
+    if ( !Args::checkBytes() ) {
+        puts("E: The number specifed with -b argument isn't a natural number!");
         exit(1);
     }
 }
@@ -81,7 +92,8 @@ void readFile () {
             case '.' : case ',':
             case '<' : case '>': { Prgm::new_token(token, true); break; }
 
-            case '[' : case ']': { Prgm::new_token(token, false); break; }
+            case '[' : case ']':
+            case '(' : case ')': { Prgm::new_token(token, false); break; }
         }
     }
     fclose(bfile);
@@ -92,7 +104,7 @@ int main (int argc, char** argv) {
 
     readArgs(argv, argc);
     readFile();
-    asm_init(Args::saveasm_as + ".s", Prgm::input);
+    asm_init(Args::saveasm_as + ".s", Args::bytes);
     Prgm::pass_tokens();
     return 0;
 }

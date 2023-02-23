@@ -1,0 +1,24 @@
+bfuckfuck:
+	This is a brainfuck compiler which is able to perform most of the brainfuck programs.
+	Most of the programs were taken from "http://brainfuck.org/" page, some examples
+	are not in ./bfcodes since i didn't understand what they do or how to use them.
+	Every brainfuck file has its author, and lot of thanks for those amaizing codes :).
+
+	Difference between "(...)" and "[...]" tokens:
+	When a loop is defined the idea is run the code inside of the loop's body while
+	the current byte ain't zero, however in some cases that condition can change
+	for do what's inside the loop's body while the current byte is an alphabetic
+	character (ascii_code >= 32).
+	So that's the difference, when the compiler reads "(...)" it'll write to this
+	while the current byte is an alphabetic character, wheras, when it reads "[...]"
+	it'll write do this while the current byte ain't zero.
+
+	Some things:
+	* Comments ain't implemented.
+
+	Why?
+	This project was made to learn a little bit of assembly and to make a simple but
+	powerful compiler, and to prove me right about i can do anything if i understand
+	how it works since i was about to give up, thaks for didn't.
+
+Juan Diego Patiño Muñoz - Feb.23.2023.

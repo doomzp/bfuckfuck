@@ -1,8 +1,0 @@
-%rip
-%rax vs (%rax)
-
-
-
-
----- Idea:
-    -M <num> : The size of the array, 30000 by default.
