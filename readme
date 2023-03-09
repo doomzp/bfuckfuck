@@ -16,6 +16,11 @@ bfuckfuck:
     Some things:
     * Comments ain't implemented.
 
+    Arguments:
+    * -f <name>: Brainfuck file to compile.
+    * -s <name>: How do you wanna call the out assembly file?
+    * -b <n>: How many bytes (memories) do you wanna use?
+
     Why?
     This project was made to learn a little bit of assembly and to make a simple but
     powerful compiler, and to prove me right about i can do anything if i understand
