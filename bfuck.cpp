@@ -6,6 +6,7 @@ namespace Args {
     std::string bfcompile;
     std::string saveasm_as = "out";
     std::string bytes;
+    bool todebug = false;
 
     bool checkBytes () {
         return std::all_of(Args::bytes.begin(), Args::bytes.end(), isdigit);
@@ -57,14 +58,18 @@ void usage () {
     puts("    * -f <name>: brainfuck file to be compiled (must).");
     puts("    * -s <name>: Save the assembly file with an specific name 'out' by default.");
     puts("    * -b <bytes>: Use a number specific of bytes.");
+    puts("    * -d: Get the debug information to debug it after.");
     exit(0);
 }
 
 void readArgs (char** args, int narg) {
-    for (int i = 1; i < narg - 1; i++) {
-        if ( !strcmp(args[i], "-f") ) { Args::bfcompile = std::string(args[++i]); }
-        if ( !strcmp(args[i], "-s") ) { Args::saveasm_as = std::string(args[++i]); }
-        if ( !strcmp(args[i], "-b") ) { Args::bytes = std::string(args[++i]); }
+    for (int i = 1; i < narg; i++) {
+        if ( (i + 1) < narg ) {
+            if ( !strcmp(args[i], "-f") ) { Args::bfcompile = std::string(args[++i]); }
+            if ( !strcmp(args[i], "-s") ) { Args::saveasm_as = std::string(args[++i]); }
+            if ( !strcmp(args[i], "-b") ) { Args::bytes = std::string(args[++i]); }
+        }
+        if ( !strcmp(args[i], "-d") ) { Args::todebug = true; }
     }
 
     if ( Args::bfcompile.empty() ) { 
@@ -104,7 +109,14 @@ int main (int argc, char** argv) {
 
     readArgs(argv, argc);
     readFile();
-    asm_init(Args::saveasm_as + ".s", Args::bytes);
+
+    const std::string name = Args::saveasm_as + ".s";
+    asm_init(name, Args::bytes);
     Prgm::pass_tokens();
+
+    if ( Args::todebug ) {
+        const std::string compile = "gcc -g " + name + " -o debug_info";
+        system(compile.c_str());
+    }
     return 0;
 }

@@ -3,7 +3,7 @@ compiler_asm = cc
 
 main: bfuck.o assembly.o
 	$(compiler_cpp) -o bfcomp bfuck.o assembly.o
-	./bfcomp -f bfcodes/hello-world.b -s code -b 100
+	./bfcomp -f bfcodes/hello-world.b -s code -b 100 -d
 
 rm:
 	rm *.o bfcomp a.out
