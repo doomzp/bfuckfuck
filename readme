@@ -1,4 +1,4 @@
-bfuckfuck:
+b(fuck)^2:
     This is a brainfuck compiler which is able to perform most of the brainfuck programs.
     Most of the programs were taken from "http://brainfuck.org/" page, some examples
     are not in ./bfcodes since i didn't understand what they do or how to use them.
@@ -13,8 +13,10 @@ bfuckfuck:
     while the current byte is an alphabetic character, wheras, when it reads "[...]"
     it'll write do this while the current byte ain't zero.
 
-    Some things:
+    Ups...:
     * Comments ain't implemented.
+    * Compiler was finished in Feb.23.2023, however maybe new commits will be
+      done to future projects.
 
     Arguments:
     * -f <name>: Brainfuck file to compile.

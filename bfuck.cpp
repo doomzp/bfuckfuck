@@ -6,7 +6,6 @@ namespace Args {
     std::string bfcompile;
     std::string saveasm_as = "out";
     std::string bytes;
-    bool todebug = false;
 
     bool checkBytes () {
         return std::all_of(Args::bytes.begin(), Args::bytes.end(), isdigit);
@@ -63,13 +62,10 @@ void usage () {
 }
 
 void readArgs (char** args, int narg) {
-    for (int i = 1; i < narg; i++) {
-        if ( (i + 1) < narg ) {
-            if ( !strcmp(args[i], "-f") ) { Args::bfcompile = std::string(args[++i]); }
-            if ( !strcmp(args[i], "-s") ) { Args::saveasm_as = std::string(args[++i]); }
-            if ( !strcmp(args[i], "-b") ) { Args::bytes = std::string(args[++i]); }
-        }
-        if ( !strcmp(args[i], "-d") ) { Args::todebug = true; }
+    for (int i = 1; i < narg - 1; i++) {
+        if ( !strcmp(args[i], "-f") ) { Args::bfcompile = std::string(args[++i]); }
+        if ( !strcmp(args[i], "-s") ) { Args::saveasm_as = std::string(args[++i]); }
+        if ( !strcmp(args[i], "-b") ) { Args::bytes = std::string(args[++i]); }
     }
 
     if ( Args::bfcompile.empty() ) { 
@@ -106,17 +102,11 @@ void readFile () {
 
 int main (int argc, char** argv) {
     if ( argc < 2 ) { usage(); }
-
     readArgs(argv, argc);
     readFile();
 
     const std::string name = Args::saveasm_as + ".s";
     asm_init(name, Args::bytes);
     Prgm::pass_tokens();
-
-    if ( Args::todebug ) {
-        const std::string compile = "gcc -g " + name + " -o debug_info";
-        system(compile.c_str());
-    }
     return 0;
 }
